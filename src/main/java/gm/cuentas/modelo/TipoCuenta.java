@@ -6,9 +6,10 @@ import lombok.Getter;
 @AllArgsConstructor
 @Getter
 public enum TipoCuenta {
+
     AHORRO("Ahorro"),
     CREDITO("Crédito"),
     INVERSION("Inversión");
 
-    final String displayName;
+    private final String displayName;
 }
