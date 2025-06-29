@@ -21,6 +21,8 @@
                     <p:menubar>
                         <p:menuitem value="Inicio" icon="pi pi-fw pi-user" update=":cuentas-form:cuentas-tabla"
                                     actionListener="#{indexControlador.recuperarDatos}"/>
+                        <p:menuitem value="Agregar" icon="pi pi-fw pi-plus" update=":modal-form:cuenta-ventana"
+                                    actionListener="#{indexControlador.agregarCuenta}" oncomplete="PF('ventanaModalCuenta').show()"/>
                     </p:menubar>
                 </div>
                 <div class="card">
