@@ -7,11 +7,6 @@
         <title>Sistema de Cuentas Bancarias</title>
         <link rel="stylesheet" href="https://unpkg.com/primeflex@latest/primeflex.css" />
         <link rel="stylesheet" href="https://unpkg.com/primeflex@latest/themes/primeone-dark.css" />
-        <style>
-            .custom-table {
-                font-size: 14px !important;
-            }
-        </style>
     </h:head>
     <h:body>
         <div class="card">
@@ -22,7 +17,7 @@
                         <p:menuitem value="Inicio" icon="pi pi-fw pi-user" update=":cuentas-form:cuentas-tabla"
                                     actionListener="#{indexControlador.recuperarDatos}"/>
                         <p:menuitem value="Agregar" icon="pi pi-fw pi-plus" update=":modal-form:cuenta-ventana"
-                                    actionListener="#{indexControlador.agregarCuenta}" oncomplete="PF('ventanaModalCuenta').show()"/>
+                                    oncomplete="PF('ventanaModalCuenta').show()"/>
                     </p:menubar>
                 </div>
                 <div class="card">
@@ -59,23 +54,30 @@
                 <p:dialog  header="Detalles Cuenta" showEffect="fade" modal="true"
                            widgetVar="ventanaModalCuenta" responsive="true">
                     <p:outputPanel id="cuenta-ventana" class="ui-fluid">
-                        <div clas="field">
+                        <div clas="field" style="margin-bottom:10px !important;">
                             <p:outputLabel for="nombre">Nombre:</p:outputLabel>
-                            <p:inputText id="nombre" value="#{indexControlador.cuentaSeleccionada.nombre}" required="true"/>
+                            <p:inputText style="margin-top:10px !important;" id="nombre" value="#{indexControlador.cuentaSeleccionada.nombre}" required="true"/>
                         </div>
-                        <div clas="field">
-                            <p:outputLabel for="nombre">Tipo:</p:outputLabel>
-                            <p:selectOneMenu value="#{indexControlador.cuentaSeleccionada.tipoCuenta}" required="false">
+                        <div clas="field" style="margin-bottom:10px !important;">
+                            <p:outputLabel for="tipo" >Tipo:</p:outputLabel>
+                            <p:selectOneMenu id="tipo" value="#{indexControlador.cuentaSeleccionada.tipoCuenta}" required="false"
+                                             style="margin-top:10px !important;">
                                 <f:selectItem itemLabel="Selecciona una opción" itemValue="" noSelectionOption="true"/>
                                 <f:selectItems value="#{indexControlador.opciones}" var="tipo"
                                                itemLabel="#{tipo.displayName}" itemValue="#{tipo}"/>
                             </p:selectOneMenu>
                         </div>
-                        <div class="field">
+                        <div class="field" style="margin-bottom:10px !important;">
                             <p:outputLabel for="saldo">Saldo:</p:outputLabel>
                             <p:inputNumber id="saldo" value="#{indexControlador.cuentaSeleccionada.saldo}" required="true"/>
                         </div>
                     </p:outputPanel>
+                    <f:facet name="footer" class="align-items-center">
+                        <p:commandButton value="Guardar" icon="pi pi-check" process="cuenta-ventana @this"
+                                         actionListener="#{indexControlador.agregarCuenta}"/>
+                        <p:commandButton value="Cancelar" icon="pi pi-times" onclick="PF('ventanaModalCuenta').hide()"
+                                         class="ui-button-secondary" type="button"/>
+                    </f:facet>
                 </p:dialog>
             </h:form>
         </div>
