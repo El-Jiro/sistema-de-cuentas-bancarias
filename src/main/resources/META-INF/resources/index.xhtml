@@ -54,6 +54,30 @@
                     </p:dataTable>
                 </div>
             </h:form>
+
+            <h:form id="modal-form">
+                <p:dialog  header="Detalles Cuenta" showEffect="fade" modal="true"
+                           widgetVar="ventanaModalCuenta" responsive="true">
+                    <p:outputPanel id="cuenta-ventana" class="ui-fluid">
+                        <div clas="field">
+                            <p:outputLabel for="nombre">Nombre:</p:outputLabel>
+                            <p:inputText id="nombre" value="#{indexControlador.cuentaSeleccionada.nombre}" required="true"/>
+                        </div>
+                        <div clas="field">
+                            <p:outputLabel for="nombre">Tipo:</p:outputLabel>
+                            <p:selectOneMenu value="#{indexControlador.cuentaSeleccionada.tipoCuenta}" required="false">
+                                <f:selectItem itemLabel="Selecciona una opción" itemValue="" noSelectionOption="true"/>
+                                <f:selectItems value="#{indexControlador.opciones}" var="tipo"
+                                               itemLabel="#{tipo.displayName}" itemValue="#{tipo}"/>
+                            </p:selectOneMenu>
+                        </div>
+                        <div class="field">
+                            <p:outputLabel for="saldo">Saldo:</p:outputLabel>
+                            <p:inputNumber id="saldo" value="#{indexControlador.cuentaSeleccionada.saldo}" required="true"/>
+                        </div>
+                    </p:outputPanel>
+                </p:dialog>
+            </h:form>
         </div>
     </h:body>
 </h:html>
