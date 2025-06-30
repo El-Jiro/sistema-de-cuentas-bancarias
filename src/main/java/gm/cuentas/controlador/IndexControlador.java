@@ -66,6 +66,8 @@ public class IndexControlador {
             cuentaServicio.guardarCuenta(cuentaSeleccionada);
             //Agregamos la nueva cuenta a nuestra lista para que se actulice la vista sin tener que consultar la base de datos
             cuentas.add(cuentaSeleccionada);
+            //Reiniciamos el objeto cuenta vinculado al formulario
+            this.cuentaSeleccionada = new Cuenta();
             //Enviamos un mensaje con FacesContext
             FacesContext.getCurrentInstance().addMessage(null,
                     new FacesMessage("Cuenta agregada",
