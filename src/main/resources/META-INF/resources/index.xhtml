@@ -46,6 +46,14 @@
                                 <f:convertNumber type="currency" currencySymbol="$" />
                             </h:outputText>
                         </p:column>
+                        <p:column headerText="Acciones">
+                            <p:commandButton value="Editar" icon="pi pi-pencil" update="modal-form:cuenta-ventana"
+                                             oncomplete="PF('ventanaModalCuenta').show()" process="@this"
+                                             class="ui-button-primary" style="margin-right:0.5rem">
+                                <f:setPropertyActionListener target="#{indexControlador.cuentaSeleccionada}" value="#{cuenta}"/>
+                                <p:resetInput target=":modal-form:cuenta-ventana"></p:resetInput>
+                            </p:commandButton>
+                        </p:column>
                     </p:dataTable>
                 </div>
             </h:form>
@@ -54,7 +62,8 @@
                 <p:dialog  header="Detalles Cuenta" showEffect="fade" modal="true"
                            widgetVar="ventanaModalCuenta" responsive="true">
                     <p:outputPanel id="cuenta-ventana" class="ui-fluid">
-                        <div clas="field" style="margin-bottom:10px !important;">
+                            <h:inputHidden id="oculto" value="#{indexControlador.cuentaSeleccionada.idCuenta}"/>
+                        <div class="field" style="margin-bottom:10px !important;">
                             <p:outputLabel for="nombre">Nombre:</p:outputLabel>
                             <p:inputText style="margin-top:10px !important;" id="nombre" value="#{indexControlador.cuentaSeleccionada.nombre}" required="true"/>
                         </div>
@@ -74,7 +83,7 @@
                     </p:outputPanel>
                     <f:facet name="footer" class="align-items-center">
                         <p:commandButton value="Guardar" icon="pi pi-check" process="cuenta-ventana @this"
-                                         actionListener="#{indexControlador.agregarCuenta}"/>
+                                         actionListener="#{indexControlador.guardarCuenta}"/>
                         <p:commandButton value="Cancelar" icon="pi pi-times" onclick="PF('ventanaModalCuenta').hide()"
                                          class="ui-button-secondary" type="button"/>
                     </f:facet>

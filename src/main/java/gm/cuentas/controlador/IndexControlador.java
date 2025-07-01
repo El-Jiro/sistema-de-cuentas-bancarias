@@ -31,6 +31,7 @@ public class IndexControlador {
     private List<Cuenta> cuentas;
     //Creamos un objeto de tipo cuenta sin inicializar
     @Getter
+    @Setter
     private Cuenta cuentaSeleccionada;
     @Getter
     private List<TipoCuenta> opciones;
@@ -54,31 +55,46 @@ public class IndexControlador {
         cuentas = cuentaServicio.listarCuentas();
         logger.info(nl);
         cuentas.forEach((cuenta -> logger.info(cuenta.toString())));
+        logger.info(nl);
     }
 
-    public void agregarCuenta(){
-        //Imprimimos la información del formularioo
-        logger.info("Cuenta a guardar: {}", this.cuentaSeleccionada);
+    public void guardarCuenta(){
+        //Imprimimos la información del formulario
+        logger.info("Cuenta a guardar: {}", "%s%s".formatted(this.cuentaSeleccionada, nl));
 
+        //----------------------------------CASO DE AGREGAR------------------------------------
         //Si el id del objeto cuentaSeleccionada es nulo,
         // simplemente llamamos al método guardar de nuestro servicio y lo pasamos como parámetro
-        if (this.cuentaSeleccionada.getIdCuenta()==null){
+        if (this.cuentaSeleccionada.getIdCuenta() == null){
             cuentaServicio.guardarCuenta(cuentaSeleccionada);
             //Agregamos la nueva cuenta a nuestra lista para que se actulice la vista sin tener que consultar la base de datos
             cuentas.add(cuentaSeleccionada);
             //Reiniciamos el objeto cuenta vinculado al formulario
             this.cuentaSeleccionada = new Cuenta();
-            //Enviamos un mensaje con FacesContext
-            FacesContext.getCurrentInstance().addMessage(null,
-                    new FacesMessage("Cuenta agregada",
-                            "Se ha agregado con éxito la nueva cuenta"));
+            notificarYActualizar("Cuenta agregada", "La nueva cuenta se ha agregado con éxito");
+        } else {
+            //----------------CASO DE ACTUALIZAR------------------
+            //Simplemente guardamos el objeto de nuestro formulario sobreescribiendo la información
+            this.cuentaServicio.guardarCuenta(this.cuentaSeleccionada);
 
-            //Ocultamos la ventana modal
-            PrimeFaces.current().executeScript("PF('ventanaModalCuenta').hide()");
 
-            //Recargamos la tabla
-            PrimeFaces.current().ajax().update("cuentas-form:mensajes", "cuentas-form:cuentas-tabla");
+            //Notificamos al usuario y actualizamos la vista
+            notificarYActualizar("Cuenta modificada",
+                    "Se ha actualizado correctamente la información de la cuenta con el id: " +
+                            cuentaSeleccionada.getIdCuenta());
+
+            //Reiniciamos el formulario
+            this.cuentaSeleccionada = new Cuenta();
         }
+
     }
 
+    private void notificarYActualizar(String asuntoMensaje, String cuerpoMensaje){
+        //Enviamos un mensaje con FacesContext
+        FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(asuntoMensaje, cuerpoMensaje));
+        //Ocultamos la ventana modal
+        PrimeFaces.current().executeScript("PF('ventanaModalCuenta').hide()");
+        //Recargamos la tabla
+        PrimeFaces.current().ajax().update("cuentas-form:mensajes", "cuentas-form:cuentas-tabla");
+    }
 }
