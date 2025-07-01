@@ -71,29 +71,59 @@ public class IndexControlador {
             cuentas.add(cuentaSeleccionada);
             //Reiniciamos el objeto cuenta vinculado al formulario
             this.cuentaSeleccionada = new Cuenta();
-            notificarYActualizar("Cuenta agregada", "La nueva cuenta se ha agregado con éxito");
+            notificarYActualizar("Cuenta agregada", "La nueva cuenta se ha agregado con éxito",
+                    "PF('ventanaModalCuenta').hide()");
         } else {
             //----------------CASO DE ACTUALIZAR------------------
             //Simplemente guardamos el objeto de nuestro formulario sobreescribiendo la información
             this.cuentaServicio.guardarCuenta(this.cuentaSeleccionada);
 
-
-            //Notificamos al usuario y actualizamos la vista
-            notificarYActualizar("Cuenta modificada",
-                    "Se ha actualizado correctamente la información de la cuenta con el id: " +
-                            cuentaSeleccionada.getIdCuenta());
+            //Guardamos el id en una variable
+            Integer idCuenta = this.cuentaSeleccionada.getIdCuenta();
 
             //Reiniciamos el formulario
             this.cuentaSeleccionada = new Cuenta();
+
+            //Notificamos al usuario y actualizamos la vista
+            notificarYActualizar("Cuenta modificada", "Se ha actualizado correctamente la información de la cuenta con el id: " + idCuenta,
+                    "PF('ventanaModalCuenta').hide()");
+
+
         }
 
     }
 
-    private void notificarYActualizar(String asuntoMensaje, String cuerpoMensaje){
+    public void eliminarCuenta(){
+        //Obtenemos el id del objeto enviado en el formulario
+        Integer idCuenta = this.cuentaSeleccionada.getIdCuenta();
+        //lo imprimimos
+        logger.info("ID de la cuenta a eliminar: {}", idCuenta);
+        //Eliminamos el registro de la base de datos
+        this.cuentaServicio.eliminarCuenta(idCuenta);
+        //Eliminamos el objeto correspondiente de nuestra Lista
+        Cuenta cuentaEliminada = this.buscarCuentaPorId(idCuenta);
+        logger.info("Objeto a eliminar de la lista: {}", cuentaEliminada);
+        this.cuentas.remove(cuentaEliminada);
+        //Reiniciamos el id del formulario
+        this.cuentaSeleccionada.setIdCuenta(null);
+
+        notificarYActualizar("Cuenta Eliminada", "Se ha eliminado con éxito la cuenta con el id: "
+                + idCuenta, "PF('eliminarCuentaVentana').hide()");
+    }
+
+    //Creamos un método para buscar el objeto cuenta en la lista mediante su id
+    private Cuenta buscarCuentaPorId(int id){
+        Cuenta cuenta = this.cuentas.stream().filter(c->c.getIdCuenta().
+                        equals(id)).findFirst().orElse(null);
+
+        return cuenta;
+    }
+
+    private void notificarYActualizar(String asuntoMensaje, String cuerpoMensaje, String pfScript){
         //Enviamos un mensaje con FacesContext
         FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(asuntoMensaje, cuerpoMensaje));
         //Ocultamos la ventana modal
-        PrimeFaces.current().executeScript("PF('ventanaModalCuenta').hide()");
+        PrimeFaces.current().executeScript(pfScript);
         //Recargamos la tabla
         PrimeFaces.current().ajax().update("cuentas-form:mensajes", "cuentas-form:cuentas-tabla");
     }
