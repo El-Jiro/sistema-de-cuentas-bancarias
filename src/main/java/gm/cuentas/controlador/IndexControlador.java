@@ -60,7 +60,7 @@ public class IndexControlador {
 
     public void guardarCuenta(){
         //Imprimimos la información del formulario
-        logger.info("Cuenta a guardar: {}", "%s%s".formatted(this.cuentaSeleccionada, nl));
+        logger.info("Cuenta a guardar: {}", cuentaSeleccionada.toString() + nl);
 
         //----------------------------------CASO DE AGREGAR------------------------------------
         //Si el id del objeto cuentaSeleccionada es nulo,
